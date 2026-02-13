@@ -21,10 +21,21 @@ router.post("/", async (req, res) => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ question: parsed.data.question, top_k: parsed.data.topK }),
     });
-    const data = await r.json().catch(() => ({}));
-    if (!r.ok) {
-      return res.status(502).json({ ok: false, error: "RAG service error", details: data });
+
+    const raw = await r.text();
+    let data = {};
+    try {
+      data = raw ? JSON.parse(raw) : {};
+    } catch {
+      data = { raw };
     }
+
+    if (!r.ok) {
+      // Pass through 4xx so the UI shows meaningful user-facing errors
+      const status = r.status >= 400 && r.status < 500 ? r.status : 502;
+      return res.status(status).json({ ok: false, error: "RAG service error", details: data });
+    }
+
     return res.json({ ok: true, ...data });
   } catch (e) {
     return res.status(502).json({ ok: false, error: "Could not reach RAG service", details: e.message });

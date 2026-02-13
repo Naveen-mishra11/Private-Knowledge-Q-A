@@ -85,7 +85,10 @@ app.get("/status", async (req, res) => {
   try {
     const r = await fetch(`${PY_RAG_URL}/health`);
     status.rag.ok = r.ok;
-    if (!r.ok) status.ok = false;
+    if (!r.ok) {
+      status.rag.error = await r.text().catch(() => "");
+      status.ok = false;
+    }
   } catch (e) {
     status.rag = { ok: false, error: e.message };
     status.ok = false;
@@ -95,7 +98,10 @@ app.get("/status", async (req, res) => {
   try {
     const r = await fetch(`${PY_RAG_URL}/llm-health`);
     status.llm.ok = r.ok;
-    if (!r.ok) status.ok = false;
+    if (!r.ok) {
+      status.llm.error = await r.text().catch(() => "");
+      status.ok = false;
+    }
   } catch (e) {
     status.llm = { ok: false, error: e.message };
     status.ok = false;
