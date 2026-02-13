@@ -49,8 +49,8 @@ app.use(
   })
 );
 
-// Preflight
-app.options("*", cors());
+// Preflight (Express v5 does not accept "*" as a path)
+app.options(/.*/, cors());
 
 app.get("/health", (req, res) => {
   res.json({ ok: true, service: "api", time: new Date().toISOString() });

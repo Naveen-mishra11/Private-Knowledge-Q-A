@@ -3,7 +3,6 @@
 🏠 Greater Noida, Uttar Pradesh (201306)  
 📞 9891838609  
 ✉ naveenmis2004@gmail.com  
-🌐 LinkedIn | 🌐 GitHub
 
 ## Profile
 Friendly Final-year B.Tech Computer Science student with a strong foundation in software engineering and full-stack development. Proficient in building scalable web applications using modern technologies and RESTful APIs. Solid understanding of data structures, object-oriented programming, and database systems. Actively seeking entry-level software engineering or full-stack development roles.
