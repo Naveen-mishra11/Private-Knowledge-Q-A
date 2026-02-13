@@ -1,0 +1,41 @@
+# OS
+Thumbs.db
+Desktop.ini
+
+# Env / secrets
+.env
+**/.env
+
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Vite / build
+dist/
+.vite/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.venv/
+venv/
+env/
+
+# Mongo data (local)
+data/
+
+# Local scratch
+*.log
+qa.json
+qa_out.json
+sample.txt
+
+# IDE
+.vscode/
+.idea/
