@@ -9,8 +9,4 @@ numpy==2.4.2
 requests==2.32.5
 python-dotenv==1.2.1
 PyYAML==6.0.3
-<<<<<<< HEAD
 tqdm==4.67.3
-=======
-tqdm==4.67.3
->>>>>>> df2a66d0dc87031f0501bfd3df4b0a67549598f9
