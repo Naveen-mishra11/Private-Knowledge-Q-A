@@ -11,7 +11,24 @@ const app = express();
 const PORT = process.env.PORT || 8080;
 const MONGODB_URI = process.env.MONGODB_URI;
 const PY_RAG_URL = process.env.PY_RAG_URL || "http://localhost:8000";
-const ALLOWED_ORIGINS = (process.env.ALLOWED_ORIGINS || "").split(",").map((s) => s.trim()).filter(Boolean);
+const ALLOWED_ORIGINS = (process.env.ALLOWED_ORIGINS || "")
+  .split(",")
+  .map((s) => s.trim())
+  .filter(Boolean);
+
+function normalizeOrigin(o) {
+  if (!o) return o;
+  // Remove trailing slash for reliable comparisons
+  return o.endsWith("/") ? o.slice(0, -1) : o;
+}
+
+function isOriginAllowed(origin) {
+  if (!origin) return true;
+  if (ALLOWED_ORIGINS.length === 0) return true;
+  if (ALLOWED_ORIGINS.includes("*")) return true;
+  const n = normalizeOrigin(origin);
+  return ALLOWED_ORIGINS.map(normalizeOrigin).includes(n);
+}
 
 const documentsRouter = require("./routes/documents");
 const qaRouter = require("./routes/qa");
@@ -23,14 +40,17 @@ app.use(
   cors({
     origin: (origin, cb) => {
       // allow same-origin / curl / server-to-server
-      if (!origin) return cb(null, true);
-      if (ALLOWED_ORIGINS.length === 0) return cb(null, true);
-      if (ALLOWED_ORIGINS.includes(origin)) return cb(null, true);
-      return cb(new Error(`CORS blocked for origin: ${origin}`));
+      if (isOriginAllowed(origin)) return cb(null, true);
+      // Returning an error causes the response to have no CORS headers.
+      // Instead, block by returning false (browser will block) but API can still respond.
+      return cb(null, false);
     },
     credentials: false,
   })
 );
+
+// Preflight
+app.options("*", cors());
 
 app.get("/health", (req, res) => {
   res.json({ ok: true, service: "api", time: new Date().toISOString() });
